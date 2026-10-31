@@ -418,7 +418,7 @@ app.get("/api/stats", auth, adminOnly, asyncRoute(async (req, res) => {
     channels: channels.rows[0].count,
     videos: videos.rows[0].count
   });
-}));const PORT = process.env.PORT || 3000;
+}));
 
 app.listen(PORT, () => {
   console.log(`YouTube Monitor running on port ${PORT}`);
