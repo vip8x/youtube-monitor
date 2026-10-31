@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YouTube Monitor — Dashboard</title>
+<style>
+:root{--bg:#f4f6fb;--panel:#fff;--ink:#172033;--muted:#758097;--line:#e8ecf3;--blue:#4263eb;--blue2:#eef2ff;--green:#16a36a;--orange:#e99a26;--red:#e05252}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.app{display:flex;min-height:100vh}.side{width:244px;background:#111a2e;color:#dce4f5;padding:24px 16px;display:flex;flex-direction:column;gap:26px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:#fff;padding:0 9px}.logoicon{width:34px;height:34px;border-radius:11px;background:#ff4545;display:grid;place-items:center;color:#fff;font-size:17px}
+.navlabel{font-size:10px;letter-spacing:1.4px;color:#8491aa;padding:0 12px;margin-bottom:8px}.nav a{display:flex;gap:12px;align-items:center;text-decoration:none;color:#aeb9ce;padding:11px 12px;border-radius:10px;margin:3px 0}.nav a.active,.nav a:hover{background:#253451;color:#fff}.nav .ico{width:19px;text-align:center;font-size:16px}.sidebottom{margin-top:auto;border-top:1px solid #2a3650;padding:18px 8px 0;color:#9eabc2;font-size:12px}
+.main{flex:1;min-width:0;padding:28px 34px 40px;max-width:1600px;margin:auto;width:100%}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}.eyebrow{color:var(--muted);font-size:12px}.title{font-size:25px;font-weight:800;margin:3px 0}.user{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:12px}.avatar{width:32px;height:32px;border-radius:50%;background:#dbe4ff;color:#3552c8;display:grid;place-items:center;font-weight:800}
+.actions{display:flex;gap:9px}.btn{border:1px solid var(--line);background:#fff;color:#34405a;padding:10px 14px;border-radius:9px;font-weight:650;cursor:pointer}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn:hover{filter:brightness(.97)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:22px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 3px 12px #24365b08}.stathead{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.statnum{font-size:27px;font-weight:800;margin:10px 0 4px}.statfoot{font-size:11px;color:var(--green)}.staticon{width:34px;height:34px;border-radius:10px;background:var(--blue2);display:grid;place-items:center;color:var(--blue);font-size:17px}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.85fr);gap:16px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.sectionhead h2{font-size:16px;margin:0}.muted{color:var(--muted)}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;white-space:nowrap}th{text-align:left;color:#8791a5;font-size:11px;font-weight:700;padding:10px 9px;border-bottom:1px solid var(--line)}td{padding:13px 9px;border-bottom:1px solid #f0f2f7;font-size:12px}.channel{display:flex;align-items:center;gap:10px}.chicon{width:34px;height:34px;border-radius:11px;background:#fce7e7;display:grid;place-items:center;font-weight:800;color:#e24d4d}.chname{font-weight:700;font-size:12px}.churl{font-size:10px;color:var(--muted)}.pill{display:inline-block;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:700;background:#e9f8f1;color:#138356}.pill.wait{background:#fff4df;color:#a56a0b}.pill.blue{background:#eef2ff;color:#4263eb}
+.activity{display:flex;gap:11px;padding:13px 0;border-bottom:1px solid #f0f2f7}.dot{width:9px;height:9px;background:var(--green);border-radius:50%;margin-top:5px;flex:none}.activity b{font-size:12px}.activity p{margin:3px 0;color:var(--muted);font-size:11px}.activity time{font-size:10px;color:#9aa3b4}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:9px}.quick button{text-align:left;padding:13px;border:1px solid var(--line);background:#fff;border-radius:11px;cursor:pointer}.quick strong{display:block;margin-top:7px;font-size:12px}.quick span{color:var(--muted);font-size:10px}
+.search{border:1px solid var(--line);border-radius:9px;padding:9px 11px;width:220px;max-width:45vw;outline:none}.search:focus{border-color:#9aabff}
+.view{display:none}.view.active{display:block}.subtext{color:var(--muted);font-size:12px;margin-top:5px}.employeegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.emp{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px;display:flex;align-items:center;gap:11px}.emp .avatar{width:38px;height:38px}.emp b{font-size:12px}.emp small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+@media(max-width:900px){.side{width:205px}.main{padding:22px 18px}.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.employeegrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.app{display:block}.side{width:100%;padding:13px;gap:10px}.logo{padding:0}.nav{display:flex;overflow:auto;gap:4px}.navlabel,.sidebottom{display:none}.nav a{white-space:nowrap;padding:9px 11px;font-size:12px}.main{padding:19px 13px}.top{align-items:flex-start}.title{font-size:21px}.user{font-size:11px}.stats{gap:9px}.card{padding:13px}.statnum{font-size:23px}.employeegrid{grid-template-columns:1fr}.actions{flex-wrap:wrap}.search{width:100%;max-width:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="logo"><div class="logoicon">▶</div> YouTube Monitor</div>
+  <div>
+    <div class="navlabel">MENU CHÍNH</div>
+    <nav class="nav">
+      <a href="#" class="active" data-view="dashboard"><span class="ico">▦</span>Tổng quan</a>
+      <a href="#" data-view="channels"><span class="ico">▶</span>Kho kênh YouTube</a>
+      <a href="#" data-view="employees"><span class="ico">♙</span>Nhân viên</a>
+      <a href="#" data-view="notifications"><span class="ico">♧</span>Thông báo</a>
+      <a href="#" data-view="settings"><span class="ico">⚙</span>Cài đặt</a>
+    </nav>
+  </div>
+  <div class="sidebottom">HỆ THỐNG QUẢN TRỊ<br><b style="color:#fff">Bản thiết kế giao diện</b><br><br>© YouTube Monitor</div>
+</aside>
+<main class="main">
+<header class="top"><div><div class="eyebrow">TRUNG TÂM GIÁM SÁT / <span id="crumb">TỔNG QUAN</span></div><div class="title" id="pagetitle">Tổng quan hệ thống</div><div class="subtext">Theo dõi kênh YouTube và video mới của đội ngũ.</div></div><div class="user"><div class="avatar">AD</div><div><b>Quản trị viên</b><div class="muted" style="font-size:10px">Toàn quyền hệ thống</div></div></div></header>
+
+<section class="view active" id="dashboard">
+<div class="stats">
+ <div class="card"><div class="stathead">Tổng số kênh <span class="staticon">▶</span></div><div class="statnum">1.000</div><div class="statfoot">Kho kênh chung dự kiến</div></div>
+ <div class="card"><div class="stathead">Nhân viên <span class="staticon">♙</span></div><div class="statnum">50</div><div class="statfoot">Tài khoản dự kiến</div></div>
+ <div class="card"><div class="stathead">Lượt theo dõi <span class="staticon">◎</span></div><div class="statnum">2.486</div><div class="statfoot">Tổng lượt đăng ký theo dõi</div></div>
+ <div class="card"><div class="stathead">Video mới hôm nay <span class="staticon">◷</span></div><div class="statnum">28</div><div class="statfoot">Dữ liệu minh họa</div></div>
+</div>
+<div class="grid">
+ <div class="card"><div class="sectionhead"><h2>Kênh YouTube gần đây</h2><button class="btn" onclick="showView('channels')">Xem tất cả →</button></div>
+ <div class="tablewrap"><table><thead><tr><th>KÊNH</th><th>NGƯỜI THEO DÕI</th><th>TRẠNG THÁI</th><th>CẬP NHẬT</th></tr></thead><tbody>
+ <tr><td><div class="channel"><div class="chicon">H</div><div><div class="chname">History Stories</div><div class="churl">@historystories</div></div></div></td><td>18 nhân viên</td><td><span class="pill">Đang theo dõi</span></td><td>4 phút trước</td></tr>
+ <tr><td><div class="channel"><div class="chicon" style="background:#e8efff;color:#4263eb">Z</div><div><div class="chname">Zombie Survival</div><div class="churl">@zombiesurvival</div></div></div></td><td>12 nhân viên</td><td><span class="pill">Đang theo dõi</span></td><td>8 phút trước</td></tr>
+ <tr><td><div class="channel"><div class="chicon" style="background:#fff0d9;color:#bd7a13">W</div><div><div class="chname">What If World</div><div class="churl">@whatifworld</div></div></div></td><td>9 nhân viên</td><td><span class="pill wait">Chờ kiểm tra</span></td><td>12 phút trước</td></tr>
+ <tr><td><div class="channel"><div class="chicon" style="background:#e9f8f1;color:#138356">D</div><div><div class="chname">Daily Discoveries</div><div class="churl">@dailydiscoveries</div></div></div></td><td>7 nhân viên</td><td><span class="pill">Đang theo dõi</span></td><td>20 phút trước</td></tr>
+ </tbody></table></div></div>
+ <div style="display:grid;gap:16px;align-content:start">
+ <div class="card"><div class="sectionhead"><h2>Hoạt động mới</h2><span class="muted" style="font-size:11px">Hôm nay</span></div>
+ <div class="activity"><span class="dot"></span><div><b>Nhân viên 08 thêm kênh mới</b><p>Science & Discovery</p><time>2 phút trước</time></div></div>
+ <div class="activity"><span class="dot"></span><div><b>Video mới được phát hiện</b><p>History Stories · 12:40</p><time>14 phút trước</time></div></div>
+ <div class="activity"><span class="dot" style="background:var(--orange)"></span><div><b>Nhân viên 21 bỏ theo dõi</b><p>Daily Discoveries</p><time>32 phút trước</time></div></div>
+ </div>
+ <div class="card"><div class="sectionhead"><h2>Thao tác nhanh</h2></div><div class="quick">
+ <button onclick="showView('channels')">＋<strong>Thêm kênh</strong><span>Đưa kênh vào kho chung</span></button>
+ <button onclick="showView('employees')">♙<strong>Nhân viên</strong><span>Quản lý tài khoản</span></button>
+ </div></div>
+ </div>
+</div>
+</section>
+
+<section class="view" id="channels"><div class="card"><div class="sectionhead"><div><h2>Kho kênh YouTube</h2><div class="subtext">Danh sách kênh chung để nhân viên tìm và chọn theo dõi.</div></div><button class="btn primary" onclick="alert('Bản demo: chức năng thêm kênh sẽ được kết nối ở bước lập trình.')">＋ Thêm kênh</button></div><div style="display:flex;gap:10px;margin-bottom:12px"><input class="search" placeholder="Tìm tên kênh hoặc @handle..." oninput="filterRows(this.value)"></div><div class="tablewrap"><table id="channelTable"><thead><tr><th>KÊNH YOUTUBE</th><th>NHÂN VIÊN ĐANG THEO DÕI</th><th>VIDEO MỚI NHẤT</th><th>TRẠNG THÁI</th></tr></thead><tbody>
+<tr><td><div class="channel"><div class="chicon">H</div><div><div class="chname">History Stories</div><div class="churl">@historystories</div></div></div></td><td>18</td><td>History of Ancient Cities</td><td><span class="pill">Hoạt động</span></td></tr>
+<tr><td><div class="channel"><div class="chicon">Z</div><div><div class="chname">Zombie Survival</div><div class="churl">@zombiesurvival</div></div></div></td><td>12</td><td>365 Days in the Bunker</td><td><span class="pill">Hoạt động</span></td></tr>
+<tr><td><div class="channel"><div class="chicon">W</div><div><div class="chname">What If World</div><div class="churl">@whatifworld</div></div></div></td><td>9</td><td>What If You Could...</td><td><span class="pill">Hoạt động</span></td></tr>
+<tr><td><div class="channel"><div class="chicon">D</div><div><div class="chname">Daily Discoveries</div><div class="churl">@dailydiscoveries</div></div></div></td><td>7</td><td>New discoveries</td><td><span class="pill wait">Chờ kiểm tra</span></td></tr>
+</tbody></table></div></div></section>
+
+<section class="view" id="employees"><div class="card"><div class="sectionhead"><div><h2>Quản lý nhân viên</h2><div class="subtext">Mỗi nhân viên có danh sách theo dõi riêng, không xem được danh sách riêng của người khác.</div></div><button class="btn primary" onclick="alert('Bản demo: tạo tài khoản sẽ được kết nối ở bước lập trình.')">＋ Thêm nhân viên</button></div><div class="employeegrid">
+<div class="emp"><div class="avatar">NV</div><div><b>Nhân viên 01</b><small>24 kênh đang theo dõi · Hoạt động</small></div></div>
+<div class="emp"><div class="avatar">NV</div><div><b>Nhân viên 02</b><small>36 kênh đang theo dõi · Hoạt động</small></div></div>
+<div class="emp"><div class="avatar">NV</div><div><b>Nhân viên 03</b><small>18 kênh đang theo dõi · Hoạt động</small></div></div>
+<div class="emp"><div class="avatar">NV</div><div><b>Nhân viên 04</b><small>42 kênh đang theo dõi · Hoạt động</small></div></div>
+<div class="emp"><div class="avatar">NV</div><div><b>Nhân viên 05</b><small>15 kênh đang theo dõi · Hoạt động</small></div></div>
+<div class="emp"><div class="avatar">NV</div><div><b>Nhân viên 06</b><small>31 kênh đang theo dõi · Hoạt động</small></div></div>
+</div></div></section>
+
+<section class="view" id="notifications"><div class="card"><div class="sectionhead"><h2>Lịch sử thông báo</h2><span class="pill blue">Telegram Bot chung</span></div>
+<div class="activity"><span class="dot"></span><div><b>Video mới: History of Ancient Cities</b><p>Kênh: History Stories · Gửi đến 18 nhân viên đang theo dõi kênh này.</p><time>Hôm nay, 10:42</time></div></div>
+<div class="activity"><span class="dot"></span><div><b>Video mới: 365 Days in the Bunker</b><p>Kênh: Zombie Survival · Gửi đến 12 nhân viên đang theo dõi kênh này.</p><time>Hôm nay, 09:18</time></div></div>
+<div class="activity"><span class="dot"></span><div><b>Video mới: What If You Could...</b><p>Kênh: What If World · Gửi đến 9 nhân viên đang theo dõi kênh này.</p><time>Hôm nay, 08:55</time></div></div>
+</div></section>
+<section class="view" id="settings"><div class="card"><h2>Cài đặt hệ thống</h2><p class="subtext">Các thiết lập dự kiến cho bản vận hành.</p><div class="activity"><span class="dot"></span><div><b>Chu kỳ kiểm tra kênh</b><p>Thiết lập tập trung để tối ưu giới hạn API và tài nguyên máy chủ.</p></div></div><div class="activity"><span class="dot"></span><div><b>Kết nối Telegram</b><p>Một Bot chung, gửi thông báo riêng theo danh sách theo dõi của từng tài khoản.</p></div></div><div class="activity"><span class="dot"></span><div><b>Lưu trữ dữ liệu</b><p>Cơ sở dữ liệu bền vững, độc lập với vòng đời khởi động lại của máy chủ.</p></div></div></div></section>
+</main></div>
+<script>
+const titles={dashboard:['Tổng quan hệ thống','TỔNG QUAN'],channels:['Kho kênh YouTube','KHO KÊNH'],employees:['Quản lý nhân viên','NHÂN VIÊN'],notifications:['Thông báo video mới','THÔNG BÁO'],settings:['Cài đặt hệ thống','CÀI ĐẶT']};
+function showView(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav a').forEach(x=>x.classList.toggle('active',x.dataset.view===id));document.getElementById('pagetitle').textContent=titles[id][0];document.getElementById('crumb').textContent=titles[id][1];}
+document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showView(a.dataset.view)}));
+function filterRows(q){document.querySelectorAll('#channelTable tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q.toLowerCase())?'':'none')}
+</script>
+</body></html>
